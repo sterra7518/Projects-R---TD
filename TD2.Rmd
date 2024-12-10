@@ -1,0 +1,392 @@
+---
+title: "TD 2 - Indicateurs statistiques"
+author: "Sofiane"
+date: "27/06/2022"
+output: html_document
+---
+
+
+## Exercice 3 
+
+On s'intéresse à l'influence de l'alimentation d'un chien sur sa santé. Dans ce cadre, on étudie la masse de 20 boptails en fonction de leur régime alimentaire, A ou B.
+
+Voici les masses des chiens ayant reçu l'un ou l'autre des régimes:
+
+ * Régime A : {37.9; 39.1 ; 42.1; 39.4 ; 39.8 ; 41.4; 40; 41; 40.3 ; 42.2}
+ * Régime B : {40.9; 41.5 ; 42.3; 41.3 ; 42.5 ; 42.4; 42.6 ; 41.7; 42.8 ; 43.1}
+ 
+ 
+#### Q1 
+ 
+***On défini la population, l'unité statistique, la variable étudiée et sa nature***
+
+* population : les boptails
+* unité statistique : la masse des boptails (exprimée en g)
+* variable étudié : la masse des boptails  - Quantitative continue
+
+
+#### Q2
+
+***On regroupe les données brutes par classe d'amplitude 1 dans un tableau statistiques, pour chaque régime.***
+
+
+```{r exo3_2_1}
+#on a deux vecteurs
+A <- c(37.9,39.1,42.1,39.4,39.8,41.4,40,41,40.3,42.2)
+B <- c(40.9,41.5,42.3,41.3,42.5,42.4,42.6,41.7,42.8,43.1)
+
+#regroupement en classe
+classeA <- cut(A,c(37,38,39,40,41,42,43,44),right = FALSE,include.lowest = TRUE)
+classeB <- cut(B,c(37,38,39,40,41,42,43,44),rigth = FALSE,include.lowest = TRUE)
+
+#integration des classe
+table(classeA)
+table(classeB)
+```
+
+
+#### Q4 
+
+***On trace l'histogramme des fréquences de la masse pour chaque régime***
+
+```{r exo3_2_2}
+#conversion en datafram
+dA <- data.frame(table(classeA))
+dA
+t(dA)
+dB <- data.frame(table(classeB))
+dB
+t(dB)
+
+#affichage de l'histograme
+par(mfrow=c(2,1))
+hist(A,br = c(37,38,39,40,41,42,43,44),col = 'red')
+hist(B,br = c(37,38,39,40,41,42,43,44),col = 'blue')
+```
+
+
+
+
+
+## Exercice 4
+
+Le tableau suivant présente les chiffres d'affaires journaliers(en milliers d'euros) d'un hypermarché au mois de juillet 2012:
+
+
+```{r exo2_4_0}
+jour <- c(1,2,3,5,6,7,8,9,10,12,13,15,16,17,19,20,21,22,23,24,26,27,28,29,30,31)
+CA <- c(300,360,440,360,280,300,260,420,480,300,280,320,360,440,320,260,300,240,440,520,320,260,320,300,360,420)
+
+
+dfCA <- data.frame(jour,CA)
+dfCA
+```
+
+#### Q1
+
+***On précise la nature de la variable étudiée***
+
+CA - Quantitative discret
+
+
+#### Q2 
+
+***On dresse un tableau d'effectifs regroupement les données en classes d'amplitude 50***
+
+```{r exo4_2_1}
+classeCA <- cut(CA,c(240,290,340,390,440,490,540),right = FALSE,include.lowest = TRUE)
+classeCA
+table(classeCA)
+```
+
+
+#### Q3 
+
+***On précise le mode de la série à partir des données brutes et des données groupées***
+
+```{r exo4_2_2}
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+getmode(CA)
+```
+
+
+#### Q4
+
+***On calcule le chiffre d'affaires moyen à partir des données brutes et groupées***
+
+```{r moy1}
+#moyenne 
+mean(CA)
+```
+
+Le chiffre d'affaire  moyen des données groupées est de 349.42
+
+
+#### Q5
+
+***On calcule le chiffre d'affaires médian à partir des données brutes et groupées***
+
+```{r med1}
+#moyenne 
+median(CA)
+```
+
+Le chiffre d'affaire  moyen des données groupées est de [290;340[
+
+
+
+
+## Exercice 5
+
+On a relevé sur 6 ans le nombre d'accidents du travail qui ont entraîné soit un arrêt de travil soit l'attribution d'une indemnité 
+
+
+#### Q1
+
+***On précise la variable étudiée***
+
+* Nombre d'accident du travail qui est Quantitatif continue
+
+
+#### Q2
+
+***On précise la variable étudiée***
+
+```{r exo2_5_1}
+#initialisation des variables
+annee <- c(1999,2000,2001,2002,2003,2004)
+nbr <- c(87949,88341,84144,87439,80885,78280)
+prop_nbr <- prop.table(nbr)
+```
+
+Il y a 16% d'accident ayant eu lieu durant la 5e année
+
+
+
+#### Q3 
+
+***On représente la distribution en fréquences du nombre d'accidents du travail par an à l'aide d'un  diagramme en bâtons.***
+
+
+
+#### Q4
+
+***On indique le mode de cette série***
+
+```{R mode_3_4}
+getmode(nbr)
+```
+
+Le mode de cette série est de 2002 
+
+
+#### Q5
+
+***On donne le tableau des fréquences cumulées croissantes de cette série***
+
+```{R cumule_3_5}
+#fonction pour calculer le cumule des effectifs
+cumule <- function(v) {
+  re = v
+  for (i in 2:length(v)) {
+    re[i] = re[i-1]+v[i]
+  }
+  return(re)
+}
+
+#On calcule les effectifs cumulés pour l'effectifs et la fréquence
+cumule_nbr <-cumule(nbr)
+cumul_prop <-cumule(prop.table(nbr))
+
+#On regroupe ces variables dans un dataframe
+df5 <- data.frame(annee,nbr,cumule_nbr,prop_nbr,cumul_prop)
+df5
+```
+
+On a 51.3% d'accidents ayant eu lieu pendant les 3 premières années
+
+
+
+
+
+
+## Exercice 6 
+
+***On considère une variable X, mesurée sur l'ensemble  d'une population. On ajoute une quantité fixe*** **a** ***à chaque valeur observée de X***. 
+***On va voir comment évolu chacun de ces quantités*** 
+
+```{r exo2_6_0}
+g <- c(1,2,3,4,5,3,5,6,2,4,2,3,2,3)
+g2 <- c(3,4,5,6,7,5,7,8,4,6,4,5,4,5) #on ajoute 2 à g
+```
+
+
+#### La moyenne des observations
+
+```{r exo2_6_1}
+#On calcul les moyennes
+mean(g)
+mean(g2)
+```
+
+la moyenne augmente de 'a' (donc on a une augmentation de 2)
+
+
+#### La moyenne des observations
+
+```{r exo2_6_2}
+#On calcul les médianes
+median(g)
+median(g2)
+```
+
+la médiane augmente de 'a' (donc on a une augmentation de 2)
+
+
+#### Le mode des observations
+
+```{r exo2_6_4}
+#On calcul les modes
+getmode(g)
+getmode(g2)
+```
+
+la mode augmente de 'a' (donc on a une augmentation de 2)
+
+
+#### L'écart-type des observations
+
+```{r exo2_6_3}
+#On calcul les écart-types
+sd(g)
+sd(g2)
+```
+
+on a une diminution 
+
+
+
+
+
+## Exercice 7
+
+***On considère une variable X, mesurée sur l'ensemble d'une population. On ajoute une quantité fixe*** **a** ***à chaque valeur observée de X.***
+***Comment évoluent chacune des quantités suivantes ?***
+
+```{r exo7_0}
+#On initialise les variable
+a <- c(2,1,2,3,1,3,0,2,4,2,2,1,3,4,0)
+b <- c(0,0,0,0,1,0,0,0,0,0,0,0,0,0,0)
+c <- c(2,1,2,3,1,3,4,2,4,2,20,10,5,2,3)
+```
+
+
+##### On calcul la moyenne
+
+```{r exo7_1}
+mean(a);mean(b);mean(c)
+```
+
+
+##### 0n calcul le mode
+
+```{r exo7_2}
+#on calcule le mode
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+getmode(a);getmode(b);getmode(c)
+```
+
+
+##### on calcul la mediane
+
+```{r exo7_3}
+median(a);median(b);median(c)
+```
+
+
+##### on calcul l'écart-type
+
+```{r exo7_5}
+sd(a);sd(b);sd(c)
+```
+
+##### on cherche l'écart absolu à la moyenne
+
+```{r exo7_4}
+ecart <- function(x){
+  s = 0
+  n = length(x)
+  for (i in 1:n) {
+    s = s + abs(x[i]-mean(x))
+  }
+  return(s/n)
+}
+
+ecart(a);ecart(b);ecart(c)  
+```
+
+#### Commentaire
+
+On constate que les résultats obtenues pour chacun des 3 groupes sont totalements différents et on pourrait dire que les valeurs de la moyenne et de l'écart-type sont très proches.
+
+
+
+
+## Exercice 8 
+
+
+***Le tableau suivant donne les valeurs de l'indice CAC40 (crée en 1987) entre 2000 et 2011 (valeurs au terme de l'année), et le coefficient multiplicatif reliant la valeur de l'année n à celle de l'année n+1**
+
+```{r exo8_0}
+annee2 <-c(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011)
+CAC40 <-c(5931.68,4603.81,3028.15,3498.76,3820.87,4761.61,5531.63,5617.82,3242.3,3950.59,3853.71,3139.91)
+variation <-c(0,0.78,0.66,1.16,1.09,1.25,1.16,1.02,0.58,1.22,0.98,0.81)
+```
+
+
+***On définie la variable étudiée et son type***
+
+CAC40 - Quantitatif continue
+
+
+
+***On calcul la moyenne arithmétique des coefficients de variation***
+
+```{r exo8_1}
+mean(variation)
+
+#A partir de ce coefficient moyen, on calcul ce qu'on aurait gagné ou perdu sur cette période en plaçant 10 000€
+
+10000 * mean(variation)
+```
+
+En plaçant 10 000€, on aurait perdu 300€ avec le coefficient moyen.
+
+
+
+***On calcul la moyenne géométique des rendements***
+
+```{r exo8_2}
+
+log_var <- log(variation)
+
+mean(log_var)
+
+#A partir de ce coefficient moyen, on calcul ce qu'on aurait gagné ou perdu sur cette période en plaçant 10 000€
+
+10000 * mean(log_var)
+```
+
+En plaçant 10 000€, on aurait gagné 25 900€ avec le coefficient moyen.
+
+
+***Commentaires***
+
+On peut voir q'il y a une division par 2 la valeur du CAC40 en 11 ans mais on pourrait utiliser la moyenne géométrique du rendement pour faire une augmentation
