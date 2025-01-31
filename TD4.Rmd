@@ -1,0 +1,79 @@
+---
+title: "TD4"
+author: "Sofiane"
+date: "28/06/2022"
+output: html_document
+---
+
+
+## Exercice 1
+
+***Une entreprise vend 3 types de boîtes de conserve différentes. On a réparti ses lieux de vente en 3 régions (Nord,Est,Sud) et relevé la quantité de chaque produit vendu pour chaque région. Ces informations sont regroupés dans leur tableau suivant***
+
+
+```{r mytable}
+# Construction d'un tableau de contingence
+
+mytable = matrix(c(21,38,64,28,45,14,36,25,21),byrow = TRUE,ncol = 3)
+
+colnames(mytable) = c('Ravioli','Cassoulet','Carbonnade')
+rownames(mytable) = c('Nord','Sud','Est')
+
+mytable
+```
+
+#### Q2
+
+Il y a 45 boîtes de cassoulet qui sont vendues dans la région Sud 
+Il y a 108 boîtes de cassoulet qui sont vendues dans tout le pays 
+
+
+#### Q3
+
+You can also embed plots, for example:
+
+```{r mytable2}
+(85/282) * 100
+```
+
+On a 29% des ventes qui sont des raviolis.
+
+
+```{r mytable3}
+data.frame(mytable)
+
+prop.table(mytable)
+round(prop.table(mytable),2)
+```
+
+
+
+## Exercice 2 
+
+***On se propose de décrire l'évolution de l'éducation des enfants d'une génération à l'autre. L'étude porte sur un échantillon d'individus âgés de 25 à 40 ans mariés et ayant des enfants. On dispose pour chaque individu d'un couple d'obsevations :***
+
+*  **X : Education actuelle, le type d'éducation que cet indivudu donne à ses enfants**
+*  **Y : Education d'origine, le type d'éducation que cet indivudu à reçu quand il était enfant**
+
+
+On dispose d'un tableau de contingence en éffectifs de ces 2 variables
+
+```{r mytable1_1}
+# Construction d'un tableau de contingence
+
+mytable2 = matrix(c(60,30,20,20,80,60,80,50,100),byrow = TRUE,ncol = 3)
+
+colnames(mytable2) = c('Sévère','Juste','Laxiste')
+rownames(mytable2) = c('Sévère','Juste','Laxiste')
+
+mytable2
+```
+
+#### Q1
+
+* Population étudié - les parents
+* Unité statistiques - le nombre d'enfants
+* Variable étudiés - l'education quantitatif discret
+
+* Le diagramme de distribution est adapté pour ce genre de données
+
