@@ -1,0 +1,87 @@
+---
+title: "TD 3 - Analyse de distibution"
+author: "Sofiane"
+date: "27/06/2022"
+output: html_document
+---
+
+## Exercice 2
+
+***Une association de consommateurs sommet 20 piles de 3 marques différentes à un même usage et mesure la durée de vie en minutes de ces piles. Les observations sont les suivantes :***
+
+
+```{r exo2_0}
+#On initialise les 3 variables
+
+A1 <- c(63,59,63,65,79,63,76,64,62,74,74,77,78,69,64,74,71,63,74,64)
+B1 <- c(64,69,67,67,66,70,68,62,69,65,64,69,72,68,72,64,69,67,65,63)
+C1 <- c(65,58,65,76,68,75,77,64,75,78,58,68,73,76,76,59,65,75,77,81)
+```
+
+#### Q1
+
+***On calcul les indicateurs statistiques de tendance centrale, de position et de dispersion pour chaque marque***
+
+
+```{r centrale}
+
+#fonction calculant le mode
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+#On indique les valeurs de tendances centrale
+cenA1 <- c(mean(A1),getmode(A1),median(A1))
+cenB1 <- c(mean(B1),getmode(B1),median(B1))
+cenC1 <- c(mean(C1),getmode(C1),median(C1))
+
+cen <- rbind(cenA1,cenB1,cenC1)
+cen
+```
+
+
+
+
+#### Q2
+
+***On représente la boîte à moustache pour chaque marque***
+
+```{r boite}
+#On indique les valeurs de position
+posA1 <- quantile(A1)
+posB1 <- quantile(B1)
+posC1 <- quantile(C1)
+pos <- rbind(posA1,posB1,posC1)
+
+#une fonction calculant les écart à la moyenne
+ecart <- function(x){
+  s = 0
+  n = length(x)
+  for (i in 1:n) {
+    s = s + abs(x[i]-mean(x))
+  }
+  return(s/n)
+}
+
+#On indique les valeurs de dispersion
+dispA1 <- c(var(A1),sd(A1),ecart(A1))
+dispB1 <- c(var(B1),sd(B1),ecart(B1))
+dispC1 <- c(var(C1),sd(C1),ecart(C1))
+disp <- rbind(dispA1,dispB1,dispC1)
+disp
+
+#on regroupe les valeurs
+val <- cbind(cen,pos,disp)
+row.names(val) <- c('A','B','C')
+colnames(val) <- c('moy','mode','med','min','Q1','med','Q3','max','var','sd','écart_moy')
+val
+
+#Boite à moustache
+boxplot(A1,B1,C1,col = c('red','blue','yellow'),main = "Boite à moustache", names = c('A','B','C'))
+```
+
+***COMMENTAIRES***
+
+On a une faible distribution pour la marque B donc la durée des piles B varient peu contrairement aux piles A et C qui ont une forte variations des duréee de vie (sauf que les piles C ont moyennement une durée de vie netement plus élévée que celle des piles A)
